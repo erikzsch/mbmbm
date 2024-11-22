@@ -1,0 +1,15 @@
+default:
+  "target_col_name": Depth
+  "input_col_idxs":
+    "type": "full"
+
+
+label_test:
+  "target_col_name": classif_test
+  "input_col_idxs":
+    "type": "full"
+  "label_map":
+    target_1: 0
+    target_2: 1
+    target_4: 2
+

@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "microbiome-ml-benchmark"
+version = "0.2.0"
+description = ""
+authors = [
+    "Henning Schroeder - Planet artificial intelligence GmbH <legal@planet-ai.de>",
+    "Erik Zschaubitz - Leibniz-Institut für Ostseeforschung Warnemünde",
+    "Theodor Sperlea - Leibniz-Institut für Ostseeforschung Warnemünde"
+]
+license = "LICENSE"
+readme = "README.md"
+documentation = "https://git.io-warnemuende.de/sperlea/microbiome_ML_benchmark"
+homepage = "https://git.io-warnemuende.de/sperlea/microbiome_ML_benchmark"
+
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+
+
+packages = [{include = "mbmbm"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+numpy = "^1.23.4"
+matplotlib = "^3.6.2"
+pandas = "^1.5.2"
+torch = "^2.0,!=2.0.1"
+scikit-learn = "^1.2.2"
+loguru = "^0.7.0"
+omegaconf = "^2.0.0"
+hydra-core = "^1.3.2"
+pillow = "^10.0.1"
+opencv-python = "^4.8.0.76"
+tabulate = "^0.9.0"
+fcbf = "^0.1.1"
+scikit-bio = "^0.5.9"
+seaborn = "^0.13.2"
+skorch = "^1.0.0"
+pytest-env = "^1.1.5"
+torchmetrics = "^1.6.0"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "*"
+pytest = "*"
+pytest-cov = "*"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.report]
+fail_under = 100
+exclude_lines = [
+    'if TYPE_CHECKING:',
+    'pragma: no cover'
+]
+
+[tool.pytest.ini_options]
+addopts = "-rA -s -v"
+env = [
+    "MBMBM_IS_TESTING=True",
+    ]
+
+[tool.poetry.scripts]
+mbmbm-train = "mbmbm/scripts/train:main"
+mbmbm-validate = "mbmbm/scripts/val:main"
+mbmbm-predict = "mbmbm/scripts/predict:main"
+screening-24-08 = "example_scripts.screening_2024_08:run"

@@ -1,0 +1,4 @@
+default:
+  "target_col_name": pH
+  "input_col_idxs":
+    "type": "full"

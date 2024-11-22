@@ -1,0 +1,50 @@
+hydra:
+  run:
+    dir: ${out_dir}/hydra_configs/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir:
+  job:
+    chdir: False
+
+seed: 819
+out_dir: models
+out_name: tmp
+val_load_dir: models/tmp
+dataset_id: ds_test_small
+dataset_config: label_test
+
+preproc:
+  - _target_: mbmbm.transform.ReplaceNaNTransform
+    value_to_replace_with: 0
+  - _target_: mbmbm.transform.RemoveOutOfRangeColumnsTransform
+    min_val: 0
+    max_val: 300
+
+feature_engine:
+  _target_: mbmbm.featureengine.featureengines.FeatureSelectorGUS
+  score_func: f_classif
+  param: 10
+
+is_classif_model: True
+model:
+  _target_: sklearn.ensemble.RandomForestClassifier
+  max_depth: 5
+  n_estimators: 10
+  max_features: 4
+  random_state: 42
+
+num_classes: 3
+metrics:
+  - _target_: torchmetrics.classification.MulticlassPrecision
+    num_classes: ${num_classes}
+  - _target_: torchmetrics.classification.MulticlassRecall
+    num_classes: ${num_classes}
+  - _target_: torchmetrics.classification.F1Score
+    num_classes: ${num_classes}
+    task: multiclass
+  - _target_: torchmetrics.classification.MulticlassAccuracy
+    num_classes: ${num_classes}
+  - _target_: torchmetrics.classification.MulticlassAUROC
+    num_classes: ${num_classes}
+
+
+

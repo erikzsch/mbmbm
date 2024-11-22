@@ -1,0 +1,37 @@
+hydra:
+  run:
+    dir: ${out_dir}/hydra_configs/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir:
+  job:
+    chdir: False
+
+seed: 819
+out_dir: models
+out_name: tmp
+val_load_dir: models/tmp
+dataset_id: ds_test_small
+dataset_config: default
+plot_subdir: plots
+is_train_plotting: True
+is_eval_plotting: True
+
+preproc:
+  - _target_: mbmbm.transform.ReplaceNaNTransform
+    value_to_replace_with: 0
+  - _target_: mbmbm.transform.RemoveOutOfRangeColumnsTransform
+    min_val: 0
+    max_val: 300
+
+feature_engine:
+  _target_: mbmbm.featureengine.featureengines.FeatureSelectorGUS
+  score_func: chi2
+
+model:
+  _target_: sklearn.ensemble.RandomForestRegressor
+  n_estimators: 100
+  random_state: 42
+
+metrics:
+  - _target_: torchmetrics.MeanSquaredError
+  - _target_: torchmetrics.MeanAbsoluteError
+  - _target_: torchmetrics.R2Score

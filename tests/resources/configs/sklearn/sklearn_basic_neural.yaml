@@ -1,0 +1,31 @@
+hydra:
+  run:
+    dir: ${out_dir}/hydra_configs/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir:
+  job:
+    chdir: False
+
+seed: 819
+out_dir: models
+out_name: tmp
+val_load_dir: models/tmp
+dataset_id: ds_test_small
+dataset_config: default
+
+
+feature_engine:
+  _target_: mbmbm.featureengine.featureengines.FeatureSelectorGUS
+  score_func: chi2
+
+model:
+  _target_: sklearn.neural_network.MLPRegressor
+  hidden_layer_sizes: [10, 20, 40]
+  learning_rate: adaptive
+  learning_rate_init: 0.001
+  random_state: ${seed}
+  max_iter: 200
+
+metrics:
+  - _target_: torchmetrics.MeanSquaredError
+  - _target_: torchmetrics.MeanAbsoluteError
+  - _target_: torchmetrics.R2Score

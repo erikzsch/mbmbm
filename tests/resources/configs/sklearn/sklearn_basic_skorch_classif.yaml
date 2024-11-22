@@ -1,0 +1,48 @@
+hydra:
+  run:
+    dir: ${out_dir}/hydra_configs/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir:
+  job:
+    chdir: False
+
+seed: 819
+out_dir: models
+out_name: tmp
+val_load_dir: models/tmp
+dataset_id: ds_test_small
+dataset_config: default
+
+target_preproc:
+  - _target_: mbmbm.transform.Binning2ClsIdxTransform
+    bin_borders: [30.0, 70.0]
+
+feature_engine:
+  _target_: mbmbm.featureengine.featureengines.FeatureSelectorGUS
+  score_func: chi2
+  param: 10
+
+is_classif_model: True
+model:
+  _target_: skorch.NeuralNetClassifier
+  module:
+    _target_: mbmbm.neural.skorch.classifier.BasicNNClassif
+    _convert_: partial
+  max_epochs: 10
+  criterion:
+    _target_: torch.nn.CrossEntropyLoss
+  lr: 0.1
+  iterator_train__shuffle: True
+
+
+metrics:
+  - _target_: torchmetrics.classification.MulticlassPrecision
+    num_classes: 3
+  - _target_: torchmetrics.classification.MulticlassRecall
+    num_classes: 3
+  - _target_: torchmetrics.classification.F1Score
+    num_classes: 3
+    task: multiclass
+  - _target_: torchmetrics.classification.MulticlassAccuracy
+    num_classes: 3
+  - _target_: torchmetrics.classification.MulticlassAUROC
+    num_classes: 3
