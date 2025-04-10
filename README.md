@@ -1,4 +1,4 @@
-# Benchmark of Supervised ML methods for the analysis of environmental microbiomes
+# Benchmark of Supervised ML Methods for the Analysis of Environmental Microbiomes
 
 ## Installation
 See [Instructions](INSTALL.md).
